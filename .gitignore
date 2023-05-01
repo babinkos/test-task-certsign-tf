@@ -32,3 +32,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+.terraform.lock.hcl
+
+test-task-certsign-tf.code-workspace
+.env
+.vscode/
