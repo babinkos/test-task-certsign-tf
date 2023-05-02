@@ -66,14 +66,14 @@ module "ecs_service" {
   name        = local.name
   cluster_arn = module.ecs_cluster.arn
 
-  desired_count = 2 # Number of instances of the task definition to place and keep running
+  desired_count = 1 # Number of instances of the task definition to place and keep running
 
-  autoscaling_min_capacity = 2
+  autoscaling_min_capacity = 1
   autoscaling_max_capacity = 100
 
-  # In case of Fargate:
-  # cpu    = 1024
-  # memory = 4096
+  # Task size | t2.micro 1vCPU 1GB vRAM
+  cpu    = 1024 # 1 vCPU = 1024
+  memory = 900
 
   # Task Definition
   requires_compatibilities = ["EC2"]
@@ -93,14 +93,16 @@ module "ecs_service" {
   # Container definition(s)
   container_definitions = {
     (local.container_name) = {
-      # In case of Fargate:
-      # cpu       = 512
-      # memory    = 1024
+      # need this to define container size as part of Task
+      cpu    = 1 # 1 vCPU = 1024
+      memory = 64
 
-      # essential = true
+      memory_reservation = 32
+
+      essential = false
       # enable_cloudwatch_logging = false
 
-      image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:8383e745"
+      image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:latest"
       port_mappings = [
         {
           name          = local.container_name
@@ -116,16 +118,17 @@ module "ecs_service" {
       #   }
       # ]
 
-      entry_point = ["/usr/bin/python", "run.py"]
+      command = ["/usr/local/bin/python", "run.py"]
 
       health_check = {
-        "retries" : 3,
+        "retries" : 10,
         "command" : [
-          "/busybox/wget -o /dev/null 'http://127.0.0.1:8000/health' || exit 1"
+          "CMD-SHELL",
+          "curl -f http://localhost:80/health"
         ],
-        "timeout" : 5,
-        "interval" : 10,
-        "startPeriod" : 10
+        "timeout" : 3,
+        "interval" : 30,
+        "startPeriod" : 3
       }
 
 
@@ -257,9 +260,10 @@ module "autoscaling" {
 
   vpc_zone_identifier = module.vpc.private_subnets
   health_check_type   = "EC2"
-  min_size            = 1
-  max_size            = 5
-  desired_capacity    = 2
+
+  min_size         = 1
+  max_size         = 1
+  desired_capacity = 1
 
   # https://github.com/hashicorp/terraform-provider-aws/issues/12582
   autoscaling_group_tags = {
