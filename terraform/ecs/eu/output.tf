@@ -130,3 +130,17 @@ output "service_autoscaling_scheduled_actions" {
   description = "Map of autoscaling scheduled actions and their attributes"
   value       = module.ecs_service.autoscaling_scheduled_actions
 }
+
+## ALB
+output "alb_dns" {
+  description = "ALB DNS name"
+  value       = module.alb.lb_dns_name
+}
+output "alb_zone_id" {
+  description = "ALB zone_id"
+  value       = module.alb.lb_zone_id
+}
+output "alb_id" {
+  description = "ALB id"
+  value       = module.alb.lb_id
+}

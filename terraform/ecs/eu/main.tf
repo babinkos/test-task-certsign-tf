@@ -5,7 +5,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  region = "eu-central-1"
+  region = var.region
   name   = "certsign-${local.region}"
 
   vpc_cidr = "10.0.0.0/16"
@@ -16,6 +16,7 @@ locals {
 
   tags = {
     Name       = local.name
+    Region     = local.region
     Example    = local.name
     Repository = "https://github.com/terraform-aws-modules/terraform-aws-ecs"
   }
@@ -66,14 +67,14 @@ module "ecs_service" {
   name        = local.name
   cluster_arn = module.ecs_cluster.arn
 
-  desired_count = 1 # Number of instances of the task definition to place and keep running
+  desired_count = var.ecs_service_desired_count # Number of instances of the task definition to place and keep running
 
-  autoscaling_min_capacity = 1
+  autoscaling_min_capacity = 2
   autoscaling_max_capacity = 100
 
   # Task size | t2.micro 1vCPU 1GB vRAM
-  cpu    = 1024 # 1 vCPU = 1024
-  memory = 900
+  cpu    = var.ecs_service_cpu    # 1 vCPU = 1024
+  memory = var.ecs_service_memory # if unset defaults to 2GB wich is more that 1GB for t2.micro
 
   # Task Definition
   requires_compatibilities = ["EC2"]
@@ -94,15 +95,15 @@ module "ecs_service" {
   container_definitions = {
     (local.container_name) = {
       # need this to define container size as part of Task
-      cpu    = 1 # 1 vCPU = 1024
-      memory = 64
+      cpu    = var.container_definition_cpu
+      memory = var.container_definition_memory
 
-      memory_reservation = 32
+      memory_reservation = var.container_definition_memory_reservation
 
-      essential = false
+      essential = true # need at least one in Task
       # enable_cloudwatch_logging = false
 
-      image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:latest"
+      image = var.container_definition_image
       port_mappings = [
         {
           name          = local.container_name
@@ -110,13 +111,6 @@ module "ecs_service" {
           protocol      = "tcp"
         }
       ]
-
-      # mount_points = [
-      #   {
-      #     sourceVolume  = "my-vol",
-      #     containerPath = "/var/www/my-vol"
-      #   }
-      # ]
 
       command = ["/usr/local/bin/python", "run.py"]
 
@@ -130,8 +124,6 @@ module "ecs_service" {
         "interval" : 30,
         "startPeriod" : 3
       }
-
-
       # Example image used requires access to write to root filesystem
       # readonly_root_filesystem = false
       readonly_root_filesystem = true
@@ -226,7 +218,7 @@ module "autoscaling" {
   for_each = {
     # On-demand instances
     test-task = {
-      instance_type              = "t2.micro" # t4g.small
+      instance_type              = var.autoscaling_instance_type # t4g.small
       use_mixed_instances_policy = false
       mixed_instances_policy     = {}
       user_data                  = <<-EOT
@@ -261,9 +253,9 @@ module "autoscaling" {
   vpc_zone_identifier = module.vpc.private_subnets
   health_check_type   = "EC2"
 
-  min_size         = 1
-  max_size         = 1
-  desired_capacity = 1
+  min_size         = var.autoscaling_min_size
+  max_size         = var.autoscaling_max_size
+  desired_capacity = var.autoscaling_desired_capacity
 
   # https://github.com/hashicorp/terraform-provider-aws/issues/12582
   autoscaling_group_tags = {
