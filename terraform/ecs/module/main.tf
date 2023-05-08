@@ -80,6 +80,7 @@ module "ecs_service" {
 
   # Task Definition
   requires_compatibilities = ["EC2"]
+  runtime_platform         = var.runtime_platform
   capacity_provider_strategy = {
     # On-demand instances
     test-task = {
@@ -161,7 +162,7 @@ module "ecs_service" {
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html#ecs-optimized-ami-linux
 data "aws_ssm_parameter" "ecs_optimized_ami" {
-  name = "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended" # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html
+  name = var.ecs_optimized_ami_filter # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html
 }
 
 module "alb_sg" {
@@ -203,18 +204,20 @@ module "alb" {
 
   target_groups = [
     {
-      name             = "${local.name}-${local.container_name}"
-      backend_protocol = "HTTP"
-      backend_port     = local.container_port
-      target_type      = "ip"
+      name                          = "${local.name}-${local.container_name}"
+      backend_protocol              = "HTTP"
+      backend_port                  = local.container_port
+      target_type                   = "ip"
+      deregistration_delay          = var.alb_deregistration_delay
+      load_balancing_algorithm_type = var.alb_load_balancing_algorithm_type
       health_check = {
-        enabled             = true
-        interval            = 30
+        enabled             = var.alb_health_check_enabled
+        interval            = var.alb_health_check_interval
         path                = "/healthz/alb"
         port                = "traffic-port"
-        healthy_threshold   = 2
-        unhealthy_threshold = 6
-        timeout             = 10
+        healthy_threshold   = var.alb_health_check_healthy_threshold
+        unhealthy_threshold = var.alb_health_check_unhealthy_threshold
+        timeout             = var.alb_health_check_timeout
         protocol            = "HTTP"
         matcher             = "200-399"
       }

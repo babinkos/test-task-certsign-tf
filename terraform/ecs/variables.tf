@@ -3,30 +3,20 @@ variable "region" {
   type        = string
   default     = "eu-central-1"
 }
-variable "ecs_service_desired_count" {
-  description = "ecs_service_desired_count"
-  type        = number
-  default     = 2
-}
+# variable "ecs_service_desired_count" {
+#   description = "ecs_service_desired_count"
+#   type        = number
+#   default     = 2
+# }
 variable "ecs_service_cpu" {
   description = "ecs_service_cpu"
   type        = number
-  default     = 128 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
+  default     = 1024
 }
 variable "ecs_service_memory" {
   description = "ecs_service_memory"
   type        = number
-  default     = 300
-}
-variable "autoscaling_min_capacity" {
-  description = "autoscaling_min_capacity"
-  type        = number
-  default     = 2
-}
-variable "autoscaling_max_capacity" {
-  description = "autoscaling_max_capacity"
-  type        = number
-  default     = 6
+  default     = 900
 }
 variable "container_definition_cpu" {
   description = "container_definition_cpu"
@@ -36,12 +26,12 @@ variable "container_definition_cpu" {
 variable "container_definition_memory_reservation" {
   description = "container_definition_memory_reservation"
   type        = number
-  default     = 180
+  default     = 32
 }
 variable "container_definition_memory" {
   description = "container_definition_memory"
   type        = number
-  default     = 300
+  default     = 64
 }
 variable "container_definition_image" {
   description = "container_definition_image"
@@ -126,4 +116,3 @@ variable "ecs_optimized_ami_filter" {
   type        = string
   default     = "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended" # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html
 }
-
