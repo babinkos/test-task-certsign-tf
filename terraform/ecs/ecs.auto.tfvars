@@ -5,8 +5,8 @@ container_definition_memory_reservation = 32 # VSS/RAM of running app
 container_definition_memory             = 82
 autoscaling_min_size                    = 2 # ASG min
 autoscaling_max_size                    = 3 # ASG max
-ecs_service_min_capacity                = 2 # Minimum number of tasks to run in your service
-ecs_service_max_capacity                = 5 # Maximum number of tasks to run in your service
+ecs_service_min_capacity                = 2 # Minimum number of tasks to run in your service, 2 as minimum to have them running on different EC2
+ecs_service_max_capacity                = 30 # Maximum number of tasks to run in your service (Instance vCPU units / task size)*ASG max instances
 
 container_definition_image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:amd64" # tags : amd64 | arm64
 
@@ -25,11 +25,11 @@ ecs_optimized_ami_filter = "/aws/service/ecs/optimized-ami/amazon-linux-2023/rec
 #  a health check grace period of up to 2,147,483,647 seconds (about 69 years). During that time, the Amazon ECS service scheduler ignores
 #   health check status. This grace period can prevent the service scheduler from marking tasks as unhealthy and stopping them before
 #    they have time to come up.
-health_check_grace_period                 = 600
-initial_lifecycle_hooks_heartbeat_timeout = 90
-alb_deregistration_delay                  = 120
+health_check_grace_period                 = 180 # ASG EC2 healthchecks
+initial_lifecycle_hooks_heartbeat_timeout = 90 # time to wait until EC2 bootstrapped before Service add it to ALB target group
+alb_deregistration_delay                  = 30
 alb_health_check_enabled                  = true
-alb_health_check_interval                 = 120 # The range is 5–300 seconds
+alb_health_check_interval                 = 80 # The range is 5–300 seconds
 alb_health_check_healthy_threshold        = 2   # The range is 2–10
 alb_health_check_unhealthy_threshold      = 5   #  The range is 2–10
-alb_health_check_timeout                  = 118 # The range is 2–120
+alb_health_check_timeout                  = 78 # The range is 2–120
