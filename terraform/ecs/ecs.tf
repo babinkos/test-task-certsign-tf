@@ -6,7 +6,7 @@ module "ecs_cluster_eu" {
   container_definition_memory_reservation = var.container_definition_memory_reservation # VSS/RAM of running app
   container_definition_memory             = var.container_definition_memory
   autoscaling_min_size                    = var.autoscaling_min_size
-  ecs_service_max_size                    = var.ecs_service_max_size
+  autoscaling_max_size                    = var.autoscaling_max_size
   ecs_service_min_capacity                = var.ecs_service_min_capacity # Minimum number of tasks to run in your service
 
   # cpu: Tracking ECSServiceAverageCPUUtilization at 75

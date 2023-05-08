@@ -8,15 +8,25 @@ variable "region" {
 #   type        = number
 #   default     = 2
 # }
-variable "ecs_service_cpu" {
-  description = "ecs_service_cpu"
+variable "ecs_service_task_cpu" {
+  description = "ecs_service_task_cpu"
   type        = number
   default     = 1024
 }
-variable "ecs_service_memory" {
-  description = "ecs_service_memory"
+variable "ecs_service_task_memory" {
+  description = "ecs_service_task_memory"
   type        = number
   default     = 900
+}
+variable "ecs_service_min_capacity" {
+  description = "ecs_service_min_capacity"
+  type        = number
+  default     = 2
+}
+variable "ecs_service_max_capacity" {
+  description = "ecs_service_max_capacity"
+  type        = number
+  default     = 6
 }
 variable "container_definition_cpu" {
   description = "container_definition_cpu"

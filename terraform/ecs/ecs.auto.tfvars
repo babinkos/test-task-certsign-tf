@@ -1,5 +1,5 @@
 # region                                  = "eu-central-1"
-ecs_service_task_cpu                    = 256 # For tasks that run on EC2 or external instances, this field is optional. If your cluster doesn't have any registered container instances with the requested CPU units available, the task fails. Supported values for tasks that run on EC2 or external instances are between 128 CPU units (0.125 vCPUs) and 10240 CPU units (10 vCPUs).
+ecs_service_task_cpu                    = 128 # For tasks that run on EC2 or external instances, this field is optional. If your cluster doesn't have any registered container instances with the requested CPU units available, the task fails. Supported values for tasks that run on EC2 or external instances are between 128 CPU units (0.125 vCPUs) and 10240 CPU units (10 vCPUs).
 ecs_service_task_memory                 = 82
 container_definition_memory_reservation = 32 # VSS/RAM of running app
 container_definition_memory             = 82
@@ -8,15 +8,15 @@ autoscaling_max_size                    = 3 # ASG max
 ecs_service_min_capacity                = 2 # Minimum number of tasks to run in your service
 ecs_service_max_capacity                = 5 # Maximum number of tasks to run in your service
 
-container_definition_image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:arm64" # tags : amd64 | arm64
+container_definition_image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:amd64" # tags : amd64 | arm64
 
-autoscaling_instance_type = "t4g.small" # t2.micro (1 GB/ 1 vCPU) | t4g.small (2 GB/ 2 vCPU), arch = X86_64 | ARM64
+autoscaling_instance_type = "t2.micro" # t2.micro (1 GB/ 1 vCPU) | t4g.small (2 GB/ 2 vCPU), arch = X86_64 | ARM64
 runtime_platform = {
   "operatingSystemFamily" : "LINUX",
-  "cpuArchitecture" : "ARM64"
+  "cpuArchitecture" : "AMD64"
 }
 # "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended" or "/aws/service/ecs/optimized-ami/amazon-linux-2023/arm64/recommended" :
-ecs_optimized_ami_filter = "/aws/service/ecs/optimized-ami/amazon-linux-2023/arm64/recommended"
+ecs_optimized_ami_filter = "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended"
 
 # The period of time, in seconds, that the Amazon ECS service scheduler ignores unhealthy Elastic Load Balancing target health checks
 #  after a task has first started. This is only used when your service is configured to use a load balancer. 

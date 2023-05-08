@@ -18,12 +18,12 @@ variable "ecs_service_task_memory" {
   type        = number
   default     = 300
 }
-variable "autoscaling_min_capacity" {
+variable "ecs_service_min_capacity" {
   description = "ecs_service_min_capacity"
   type        = number
   default     = 2
 }
-variable "autoscaling_max_capacity" {
+variable "ecs_service_max_capacity" {
   description = "ecs_service_max_capacity"
   type        = number
   default     = 6
