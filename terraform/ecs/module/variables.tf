@@ -126,4 +126,8 @@ variable "ecs_optimized_ami_filter" {
   type        = string
   default     = "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended" # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html
 }
-
+variable "ecs_asg_target_capacity" {
+  description = "ecs_asg_target_capacity"
+  type        = number
+  default     = 80
+}

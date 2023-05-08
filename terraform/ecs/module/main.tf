@@ -43,7 +43,7 @@ module "ecs_cluster" {
         maximum_scaling_step_size = 2
         minimum_scaling_step_size = 1
         status                    = "ENABLED"
-        target_capacity           = 60
+        target_capacity           = var.ecs_asg_target_capacity
       }
 
       default_capacity_provider_strategy = {
