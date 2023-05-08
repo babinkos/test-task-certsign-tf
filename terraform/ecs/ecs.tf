@@ -33,4 +33,5 @@ module "ecs_cluster_eu" {
 # module "ecs_cluster_us" {
 #   source = "./module"
 #   region = "us-east-2"
+#   container_definition_image = "503110391064.dkr.ecr.us-east-2.amazonaws.com/sign-svc:amd64"
 # }

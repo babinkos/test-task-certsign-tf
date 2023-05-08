@@ -123,9 +123,9 @@ module "ecs_service" {
           "CMD-SHELL",
           "/usr/bin/curl -sf http://localhost:80/healthz"
         ],
-        "timeout" : 3,
+        "timeout" : 5,
         "interval" : 10,
-        "startPeriod" : 70 # need at least 1min to start unicorn in container
+        "startPeriod" : 80 # need at least 1min to start unicorn in container
       }
       # Example image used requires access to write to root filesystem
       # readonly_root_filesystem = false
