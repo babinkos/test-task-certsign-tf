@@ -8,23 +8,23 @@ variable "ecs_service_desired_count" {
   type        = number
   default     = 2
 }
-variable "ecs_service_cpu" {
-  description = "ecs_service_cpu"
+variable "ecs_service_task_cpu" {
+  description = "ecs_service_task_cpu"
   type        = number
   default     = 128 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
 }
-variable "ecs_service_memory" {
-  description = "ecs_service_memory"
+variable "ecs_service_task_memory" {
+  description = "ecs_service_task_memory"
   type        = number
   default     = 300
 }
 variable "autoscaling_min_capacity" {
-  description = "autoscaling_min_capacity"
+  description = "ecs_service_min_capacity"
   type        = number
   default     = 2
 }
 variable "autoscaling_max_capacity" {
-  description = "autoscaling_max_capacity"
+  description = "ecs_service_max_capacity"
   type        = number
   default     = 6
 }

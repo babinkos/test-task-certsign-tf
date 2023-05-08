@@ -1,17 +1,17 @@
 module "ecs_cluster_eu" {
   source                                  = "./module"
   region                                  = "eu-central-1"
-  ecs_service_cpu                         = var.ecs_service_cpu # For tasks that run on EC2 or external instances, this field is optional. If your cluster doesn't have any registered container instances with the requested CPU units available, the task fails. Supported values for tasks that run on EC2 or external instances are between 128 CPU units (0.125 vCPUs) and 10240 CPU units (10 vCPUs).
-  ecs_service_memory                      = var.ecs_service_memory
+  ecs_service_task_cpu                    = var.ecs_service_task_cpu # For tasks that run on EC2 or external instances, this field is optional. If your cluster doesn't have any registered container instances with the requested CPU units available, the task fails. Supported values for tasks that run on EC2 or external instances are between 128 CPU units (0.125 vCPUs) and 10240 CPU units (10 vCPUs).
+  ecs_service_task_memory                 = var.ecs_service_task_memory
   container_definition_memory_reservation = var.container_definition_memory_reservation # VSS/RAM of running app
   container_definition_memory             = var.container_definition_memory
   autoscaling_min_size                    = var.autoscaling_min_size
-  autoscaling_max_size                    = var.autoscaling_max_size
-  autoscaling_min_capacity                = var.autoscaling_min_capacity # Minimum number of tasks to run in your service
+  ecs_service_max_size                    = var.ecs_service_max_size
+  ecs_service_min_capacity                = var.ecs_service_min_capacity # Minimum number of tasks to run in your service
 
   # cpu: Tracking ECSServiceAverageCPUUtilization at 75
   # memory: Tracking ECSServiceAverageMemoryUtilization at 75
-  autoscaling_max_capacity = var.autoscaling_max_capacity # Maximum number of tasks to run in your service
+  ecs_service_max_capacity = var.ecs_service_max_capacity # Maximum number of tasks to run in your service
 
   container_definition_image = var.container_definition_image # tags : amd64 | arm64
 

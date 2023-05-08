@@ -71,12 +71,12 @@ module "ecs_service" {
 
   desired_count = var.ecs_service_desired_count # Number of instances of the task definition to place and keep running
 
-  autoscaling_min_capacity = var.autoscaling_min_capacity
-  autoscaling_max_capacity = var.autoscaling_max_capacity # Maximum number of tasks to run in your service
+  autoscaling_min_capacity = var.ecs_service_min_capacity
+  autoscaling_max_capacity = var.ecs_service_max_capacity # Maximum number of tasks to run in your service
 
   # Task size | t2.micro 1vCPU 1GB vRAM
-  cpu    = var.ecs_service_cpu    # 1 vCPU = 1024
-  memory = var.ecs_service_memory # if unset defaults to 2GB wich is more that 1GB for t2.micro
+  cpu    = var.ecs_service_task_cpu    # 1 vCPU = 1024
+  memory = var.ecs_service_task_memory # if unset defaults to 2GB wich is more that 1GB for t2.micro
 
   # Task Definition
   requires_compatibilities = ["EC2"]
@@ -247,7 +247,7 @@ module "autoscaling" {
         EOF
         sudo docker pull ${var.container_definition_image}
         sudo docker pull amazon/amazon-ecs-agent:latest
-        sudo docker pull amazon/amazon-ecs-pause:0.1.0
+        sudo docker pull amazon/amazon-ecs-pause:latest
       EOT
     }
   }
