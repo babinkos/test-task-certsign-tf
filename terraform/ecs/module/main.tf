@@ -11,7 +11,7 @@ locals {
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  container_name = "ecs-sample" # "${name}-${container_name}"  cannot be longer than 32 characters
+  container_name = "signsrv" # "${name}-${container_name}"  cannot be longer than 32 characters
   container_port = 80
 
   tags = {
@@ -67,10 +67,12 @@ module "ecs_service" {
   name        = local.name
   cluster_arn = module.ecs_cluster.arn
 
+  launch_type = "EC2"
+
   desired_count = var.ecs_service_desired_count # Number of instances of the task definition to place and keep running
 
-  autoscaling_min_capacity = 2
-  autoscaling_max_capacity = 100
+  autoscaling_min_capacity = var.autoscaling_min_capacity
+  autoscaling_max_capacity = var.autoscaling_max_capacity # Maximum number of tasks to run in your service
 
   # Task size | t2.micro 1vCPU 1GB vRAM
   cpu    = var.ecs_service_cpu    # 1 vCPU = 1024
@@ -95,7 +97,7 @@ module "ecs_service" {
   container_definitions = {
     (local.container_name) = {
       # need this to define container size as part of Task
-      cpu    = var.container_definition_cpu
+      # cpu    = var.container_definition_cpu
       memory = var.container_definition_memory
 
       memory_reservation = var.container_definition_memory_reservation
@@ -112,17 +114,17 @@ module "ecs_service" {
         }
       ]
 
-      command = ["/usr/local/bin/python", "run.py"]
+      command = ["/usr/local/bin/python", "sign_srv_fastapi.py"]
 
       health_check = {
-        "retries" : 10,
+        "retries" : 3,
         "command" : [
           "CMD-SHELL",
-          "curl -f http://localhost:80/health"
+          "/usr/bin/curl -sf http://localhost:80/healthz"
         ],
         "timeout" : 3,
-        "interval" : 30,
-        "startPeriod" : 3
+        "interval" : 10,
+        "startPeriod" : 2
       }
       # Example image used requires access to write to root filesystem
       # readonly_root_filesystem = false
@@ -205,6 +207,17 @@ module "alb" {
       backend_protocol = "HTTP"
       backend_port     = local.container_port
       target_type      = "ip"
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/healthz/alb"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 6
+        timeout             = 10
+        protocol            = "HTTP"
+        matcher             = "200-399"
+      }
     },
   ]
 
@@ -229,6 +242,9 @@ module "autoscaling" {
         ECS_CONTAINER_INSTANCE_TAGS=${jsonencode(local.tags)}
         ECS_ENABLE_TASK_IAM_ROLE=true
         EOF
+        sudo docker pull ${var.container_definition_image}
+        sudo docker pull amazon/amazon-ecs-agent:latest
+        sudo docker pull amazon/amazon-ecs-pause:0.1.0
       EOT
     }
   }
@@ -250,12 +266,22 @@ module "autoscaling" {
     AmazonSSMManagedInstanceCore        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   }
 
-  vpc_zone_identifier = module.vpc.private_subnets
-  health_check_type   = "EC2"
+  vpc_zone_identifier       = module.vpc.private_subnets
+  health_check_type         = "EC2"
+  health_check_grace_period = var.health_check_grace_period
 
   min_size         = var.autoscaling_min_size
   max_size         = var.autoscaling_max_size
   desired_capacity = var.autoscaling_desired_capacity
+
+  initial_lifecycle_hooks = [
+    {
+      name                 = "EC2StartupLifeCycleHook"
+      default_result       = "CONTINUE"
+      heartbeat_timeout    = var.initial_lifecycle_hooks_heartbeat_timeout
+      lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+    }
+  ]
 
   # https://github.com/hashicorp/terraform-provider-aws/issues/12582
   autoscaling_group_tags = {
