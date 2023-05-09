@@ -29,7 +29,7 @@ module "ecs_cluster_eu" {
   alb_health_check_unhealthy_threshold      = var.alb_health_check_unhealthy_threshold #  The range is 2–10
   alb_health_check_timeout                  = var.alb_health_check_timeout             # The range is 2–120
   cert_validity_days_cap                    = var.cert_validity_days_cap
-  acm_certificate_arn                       = var.acm_certificate_arn
+  acm_certificate_arn                       = var.acm_certificate_arn_eu
 }
 module "ecs_cluster_us" {
   source                                  = "./module"
@@ -63,5 +63,5 @@ module "ecs_cluster_us" {
   alb_health_check_unhealthy_threshold      = var.alb_health_check_unhealthy_threshold #  The range is 2–10
   alb_health_check_timeout                  = var.alb_health_check_timeout             # The range is 2–120
   cert_validity_days_cap                    = var.cert_validity_days_cap
-  acm_certificate_arn                       = var.acm_certificate_arn
+  acm_certificate_arn                       = var.acm_certificate_arn_us
 }

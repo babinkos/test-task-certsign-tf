@@ -141,7 +141,12 @@ variable "cert_validity_days_cap" {
   type        = number
   default     = 3
 }
-variable "acm_certificate_arn" {
+variable "acm_certificate_arn_eu" {
+  description = "acm_certificate_arn"
+  type        = string
+  default     = ""
+}
+variable "acm_certificate_arn_us" {
   description = "acm_certificate_arn"
   type        = string
   default     = ""

@@ -37,4 +37,6 @@ alb_health_check_timeout                  = 40 # The range is 2–120 and less t
 ecs_asg_target_capacity                   = 80
 
 cert_validity_days_cap = 3
-acm_certificate_arn   = "arn:aws:acm:eu-central-1:503110391064:certificate/b69d5ea1-c4e9-4c64-9369-bb84839dd75c"
+# ACM certificates must be requested or imported in the same AWS Region as your load balancer.
+acm_certificate_arn_eu = "arn:aws:acm:eu-central-1:503110391064:certificate/b69d5ea1-c4e9-4c64-9369-bb84839dd75c"
+acm_certificate_arn_us = "arn:aws:acm:us-east-2:503110391064:certificate/b4d78e50-6785-4ca4-a013-e6fe7ba527d8"
