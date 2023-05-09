@@ -100,11 +100,38 @@ module "records" {
         zone_id                = local.zone_id
         evaluate_target_health = true
       }
-      set_identifier = "geo-failback-europe"
+      set_identifier = "geo-failback-europe-eu"
       geolocation_routing_policy = {
         # AF: Africa, AN: Antarctica, AS: Asia, EU: Europe, OC: Oceania, NA: North America, SA: South America
         continent = "EU", # https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetGeoLocation.html
+      }
+    },
+    {
+      name = "geotest"
+      type = "A"
+      # ttl  = 5
+      alias = {
+        name                   = "eu-failover-primary.babinkos.de"
+        zone_id                = local.zone_id
+        evaluate_target_health = true
+      }
+      set_identifier = "geo-failback-europe-as"
+      geolocation_routing_policy = {
         continent = "AS",
+      }
+    },
+    {
+      name = "geotest"
+      type = "A"
+      # ttl  = 5
+      alias = {
+        name                   = "eu-failover-primary.babinkos.de"
+        zone_id                = local.zone_id
+        evaluate_target_health = true
+      }
+      set_identifier = "geo-failback-europe-af"
+      geolocation_routing_policy = {
+        # AF: Africa, AN: Antarctica, AS: Asia, EU: Europe, OC: Oceania, NA: North America, SA: South America
         continent = "AF"
       }
     },
@@ -117,11 +144,48 @@ module "records" {
         zone_id                = local.zone_id
         evaluate_target_health = true
       }
-      set_identifier = "geo-failback-northamerica"
+      set_identifier = "geo-failback-northamerica-na"
       geolocation_routing_policy = {
         continent = "NA",
+      }
+    },
+    {
+      name = "geotest"
+      type = "A"
+      # ttl  = 5
+      alias = {
+        name                   = "us-failover-primary.babinkos.de"
+        zone_id                = local.zone_id
+        evaluate_target_health = true
+      }
+      set_identifier = "geo-failback-northamerica-sa"
+      geolocation_routing_policy = {
         continent = "SA",
+      }
+      }, {
+      name = "geotest"
+      type = "A"
+      # ttl  = 5
+      alias = {
+        name                   = "us-failover-primary.babinkos.de"
+        zone_id                = local.zone_id
+        evaluate_target_health = true
+      }
+      set_identifier = "geo-failback-northamerica-an"
+      geolocation_routing_policy = {
         continent = "AN",
+      }
+      }, {
+      name = "geotest"
+      type = "A"
+      # ttl  = 5
+      alias = {
+        name                   = "us-failover-primary.babinkos.de"
+        zone_id                = local.zone_id
+        evaluate_target_health = true
+      }
+      set_identifier = "geo-failback-northamerica-oc"
+      geolocation_routing_policy = {
         continent = "OC"
       }
     },
