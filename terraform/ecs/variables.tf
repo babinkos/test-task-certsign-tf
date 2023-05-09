@@ -126,3 +126,23 @@ variable "ecs_optimized_ami_filter" {
   type        = string
   default     = "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended" # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html
 }
+variable "ecs_asg_target_capacity" {
+  description = "ecs_asg_target_capacity"
+  type        = number
+  default     = 80
+}
+variable "r53_zone_id" {
+  description = "Route53 Public DNS zone id"
+  type        = string
+  default     = ""
+}
+variable "cert_validity_days_cap" {
+  description = "cert_validity_days_cap"
+  type        = number
+  default     = 3
+}
+variable "acm_certificate_arn" {
+  description = "acm_certificate_arn"
+  type        = string
+  default     = ""
+}

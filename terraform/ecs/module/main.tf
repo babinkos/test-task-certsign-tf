@@ -1,3 +1,4 @@
+# based on https://github.com/terraform-aws-modules/terraform-aws-ecs/blob/master/examples/ec2-autoscaling/main.tf
 provider "aws" {
   region = local.region
 }
@@ -116,7 +117,10 @@ module "ecs_service" {
       ]
 
       command = ["/usr/local/bin/python", "sign_srv_fastapi.py"]
-
+      environment = [
+        { name : "CERT_VALIDITY_DAYS",
+        value : var.cert_validity_days_cap }
+      ]
       health_check = {
         "retries" : 3,
         "command" : [
@@ -200,8 +204,39 @@ module "alb" {
       protocol           = "HTTP"
       target_group_index = 0
     },
+    {
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "redirect"
+      redirect = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
   ]
-
+  http_tcp_listener_rules = [
+    {
+      http_tcp_listener_index = 1
+      priority                = 1
+      actions = [{
+        type        = "redirect"
+        status_code = "HTTP_301"
+        protocol    = "HTTPS"
+      }]
+      conditions = [{
+        path_patterns = ["/cert/*"]
+      }]
+    },
+  ]
+  https_listeners = [
+    {
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = var.acm_certificate_arn
+      target_group_index = 0
+    },
+  ]
   target_groups = [
     {
       name                          = "${local.name}-${local.container_name}"

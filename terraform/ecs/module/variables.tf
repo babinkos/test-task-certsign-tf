@@ -131,3 +131,13 @@ variable "ecs_asg_target_capacity" {
   type        = number
   default     = 80
 }
+variable "cert_validity_days_cap" {
+  description = "cert_validity_days_cap"
+  type        = number
+  default     = 3
+}
+variable "acm_certificate_arn" {
+  description = "acm_certificate_arn"
+  type        = string
+  default     = ""
+}
