@@ -9,7 +9,8 @@ autoscaling_max_size                    = 6  # ASG max
 ecs_service_min_capacity                = 5  # Minimum number of tasks to run in your service, 2 as minimum to have them running on different EC2
 ecs_service_max_capacity                = 36 # Maximum number of tasks to run in your service (Instance vCPU units / task size)*capacity 80% *ASG max instances
 
-container_definition_image = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:amd64" # tags : amd64 | arm64
+container_definition_image_eu = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:amd64" # tags : amd64 | arm64
+container_definition_image_us = "503110391064.dkr.ecr.us-east-2.amazonaws.com/sign-svc:amd64"
 
 autoscaling_instance_type = "t2.micro" # t2.micro (1 GB/ 1 vCPU) | t4g.small (2 GB/ 2 vCPU), arch = X86_64 | ARM64
 runtime_platform = {

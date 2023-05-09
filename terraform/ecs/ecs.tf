@@ -13,7 +13,7 @@ module "ecs_cluster_eu" {
   # memory: Tracking ECSServiceAverageMemoryUtilization at 75
   ecs_service_max_capacity = var.ecs_service_max_capacity # Maximum number of tasks to run in your service
 
-  container_definition_image = var.container_definition_image # tags : amd64 | arm64
+  container_definition_image = var.container_definition_image_eu # tags : amd64 | arm64
 
   autoscaling_instance_type = var.autoscaling_instance_type # t2.micro (1 GB/ 1 vCPU) | t4g.small (2 GB/ 2 vCPU), arch = X86_64 | ARM64
   runtime_platform          = var.runtime_platform
@@ -34,7 +34,7 @@ module "ecs_cluster_eu" {
 module "ecs_cluster_us" {
   source                                  = "./module"
   region                                  = "us-east-2"
-  container_definition_image              = "503110391064.dkr.ecr.us-east-2.amazonaws.com/sign-svc:amd64"
+  container_definition_image              = var.container_definition_image_us
   ecs_service_task_cpu                    = var.ecs_service_task_cpu # For tasks that run on EC2 or external instances, this field is optional. If your cluster doesn't have any registered container instances with the requested CPU units available, the task fails. Supported values for tasks that run on EC2 or external instances are between 128 CPU units (0.125 vCPUs) and 10240 CPU units (10 vCPUs).
   ecs_service_task_memory                 = var.ecs_service_task_memory
   container_definition_memory_reservation = var.container_definition_memory_reservation # VSS/RAM of running app
