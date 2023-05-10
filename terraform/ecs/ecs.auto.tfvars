@@ -5,9 +5,10 @@ ecs_service_task_memory                 = 128
 container_definition_memory_reservation = 64 # MEM USAGE from docker container stats
 container_definition_memory             = 128
 autoscaling_min_size                    = 2  # ASG min instances
+autoscaling_desired_capacity            = 2
 autoscaling_max_size                    = 6  # ASG max
 ecs_service_min_capacity                = 5  # Minimum number of tasks to run in your service, 2 as minimum to have them running on different EC2
-ecs_service_max_capacity                = 36 # Maximum number of tasks to run in your service (Instance vCPU units / task size)*capacity 80% *ASG max instances
+ecs_service_max_capacity                = 30 # Maximum number of tasks to run in your service (Instance vCPU units / task size)*capacity 80% *ASG max instances
 
 container_definition_image_eu = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:amd64" # tags : amd64 | arm64
 container_definition_image_us = "503110391064.dkr.ecr.us-east-2.amazonaws.com/sign-svc:amd64"

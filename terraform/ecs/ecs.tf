@@ -7,6 +7,7 @@ module "ecs_cluster_eu" {
   container_definition_memory             = var.container_definition_memory
   autoscaling_min_size                    = var.autoscaling_min_size
   autoscaling_max_size                    = var.autoscaling_max_size
+  autoscaling_desired_capacity            = var.autoscaling_desired_capacity
   ecs_service_min_capacity                = var.ecs_service_min_capacity # Minimum number of tasks to run in your service
 
   # cpu: Tracking ECSServiceAverageCPUUtilization at 75
@@ -41,6 +42,7 @@ module "ecs_cluster_us" {
   container_definition_memory             = var.container_definition_memory
   autoscaling_min_size                    = var.autoscaling_min_size
   autoscaling_max_size                    = var.autoscaling_max_size
+  autoscaling_desired_capacity            = var.autoscaling_desired_capacity
   ecs_service_min_capacity                = var.ecs_service_min_capacity # Minimum number of tasks to run in your service
 
   # cpu: Tracking ECSServiceAverageCPUUtilization at 75
