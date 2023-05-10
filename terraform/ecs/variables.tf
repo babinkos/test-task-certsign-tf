@@ -43,10 +43,15 @@ variable "container_definition_memory" {
   type        = number
   default     = 64
 }
-variable "container_definition_image" {
+variable "container_definition_image_eu" {
   description = "container_definition_image"
   type        = string
   default     = "503110391064.dkr.ecr.eu-central-1.amazonaws.com/sign-svc:latest"
+}
+variable "container_definition_image_us" {
+  description = "container_definition_image"
+  type        = string
+  default     = "503110391064.dkr.ecr.us-east-2.amazonaws.com/sign-svc:amd64"
 }
 variable "autoscaling_instance_type" {
   description = "autoscaling_instance_type"
