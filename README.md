@@ -5,6 +5,7 @@
 - 1 region to run ECS in EU : "eu-central-1"
 - 1 region to run ECS in US : "us-east-2"
 - 1 Global R53 AWS hosted Public zone to have geolocation and failover DNS records pointing to ALB created with ECS module.
+- Customer will be roted to nearest region (EU/US), if ECS in region competely offline - geotest.babinkos.de will route to failback region (different one: US/EU).
 
 ## Pre-requisites
 
@@ -25,7 +26,7 @@ List of domains added to certificate:
 - eu-failover-secondary.babinkos.de
 - us-failover-primary.babinkos.de
 
-For tests it might be a good idea to add ALB FQND wildcard domain as well.
+For tests it might be a good idea to add ALB FQDN wildcard domain as well (like *.elb.amazonaws.com).
 
 
 ### AWS ECR created in EU and US zones, container image prepared and stored
